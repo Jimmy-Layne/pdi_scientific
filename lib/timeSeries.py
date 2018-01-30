@@ -78,14 +78,8 @@ class TimeSeries:
         master_reference_list=pd.DataFrame(data=tmp,columns=['event_index'])
         master_reference_list['found']=False
 
-
-
-
-
         #This array holds all of the percentiles we wish to calculate on the distribution
         pcalc=[1,5,10,25,50,75,90,95,99]
-
-
 
         self.percentile=np.zeros((self.time_param['num_bins'],len(pcalc)))
         self.size_counts=np.zeros((self.time_param['num_bins'],self.size_param['num_bins']))
@@ -136,14 +130,6 @@ class TimeSeries:
                 assert sum(self.size_counts[i,:]) == len(diam)
             except AssertionError:
                 print("diameter reference mismatched with total counts in DSD for bin {}".format(i))
-        # Here the final check is made for under counting of events
-        missing = sum(~master_reference_list['found'])
-        try:
-            assert not missing == 0
-        except AssertionError:
-            print("Missing entries in master reference list")
-
-
 
 
     def find_bin(self,event,type):

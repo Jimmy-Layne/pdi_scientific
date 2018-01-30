@@ -18,7 +18,7 @@ parser.add_argument('channel',metavar='cH',type=str,nargs='+',help="This is the 
 args=parser.parse_args()
 
 # This is the location of the config file, this used to be set by argparse, but users are not to be trusted
-config = "/home/mrmisanthropy/Projects/cirpas/Code/DVTparam.cfg"
+config = "/home/mrmisanthropy/Projects/pdi_scientific/pdi_config.cfg"
 # Separate out the arguments from the cli
 dataPath = args.fileNames[0]
 channel = args.channel[0]
@@ -53,11 +53,12 @@ lwc,conc,vol = met.met_comp(flight,eld_coeff,events['velocity'],params)
 
 # Now run the visualization routines to check our work
 atime=flight.rep_atime
+figSave=params['svPath']
 # Time Series Plots
 relative_time_counts = flight.time_counts/flight.time_param['delta']
-vis.arrival_time_series(relative_time_counts,atime)
-vis.pcntl_plot(flight.percentile,atime)
+vis.arrival_time_series(relative_time_counts,atime,show=True,sv_path=figSave,save=True)
+vis.pcntl_plot(flight.percentile,atime,show=True,sv_path=figSave,save=True)
 # Met Variable Plots
-vis.vol_vis(flight.rep_diameter,vol)
-vis.conc_vis(atime,conc)
-vis.lwc_vis(atime,lwc)
+vis.vol_vis(flight.rep_diameter,vol,show=True,sv_path=figSave,save=True)
+vis.conc_vis(atime,conc,show=True,sv_path=figSave,save=True)
+vis.lwc_vis(atime,lwc,show=True,sv_path=figSave,save=True)

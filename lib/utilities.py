@@ -24,7 +24,10 @@ def get_config(cPath):
     with open(cPath, 'r') as f:
         for line in f:
             key,val = line.split(":")
-            params[key.rstrip()] = float(val.rstrip())
+            if key.rstrip() =="svPath":
+                params[key.rstrip()] = val.rstrip()
+            else:
+                params[key.rstrip()] = float(val.rstrip())
     test_keys = ['sfreq','cmsk','aLen','stLimit','aqTime']
     for k in test_keys:
         if not k in params.keys():

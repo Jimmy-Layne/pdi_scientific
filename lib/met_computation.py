@@ -46,6 +46,13 @@ def view_volume(ts,vel_events,eld,ap_len):
     Q= vm*dt
     D = eld_model(eld,d)
 
+    plt.plot(d,D,'ko')
+    plt.xlabel("rep diameter (micron)")
+    plt.ylabel("PVD (micron)")
+    plt.show()
+    import pdb
+    pdb.set_trace()
+
     # Since the aperature length is provided, we can now compute the view volume for a
     # Given DSD
     # At present, Q is in meters, and D and l are in microns
@@ -80,13 +87,14 @@ def eld_model(eld, d):
     E1=eld[1]
     # Because of the nature of our ELD equation, there is a lower limit on the size of the drops on which we can compute
     # view volume. First we need to determine the lowest allowable drop size based on the ELD as computed earlier.
-    ELD_zero = np.exp(- E0 / E1)
+    eld_floor = 10
+        #np.exp(- E0 / E1)
 
     for i in range(len(d)):
         if d[i] == 0.0:
             D[i] = 0.0
-        elif d[i] < ELD_zero:
-            D[i] = ELD_zero
+        elif d[i] < eld_floor:
+            D[i] = np.sqrt(E0 + E1 * np.log(eld_floor))
         else:
             D[i] = np.sqrt(E0 + E1 * np.log(d[i]))
 

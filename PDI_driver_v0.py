@@ -59,6 +59,7 @@ relative_time_counts = flight.time_counts/flight.time_param['delta']
 vis.arrival_time_series(relative_time_counts,atime,show=True,sv_path=figSave,save=True)
 vis.pcntl_plot(flight.percentile,atime,show=True,sv_path=figSave,save=True)
 # Met Variable Plots
-vis.vol_vis(flight.rep_diameter,vol,show=True,sv_path=figSave,save=True)
+rep_vol = vol/flight.time_param['delta']
+vis.vol_vis(flight.rep_diameter,rep_vol,show=True,sv_path=figSave,save=True)
 vis.conc_vis(atime,conc,show=True,sv_path=figSave,save=True)
 vis.lwc_vis(atime,lwc,show=True,sv_path=figSave,save=True)

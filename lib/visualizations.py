@@ -35,7 +35,7 @@ def arrival_time_series(time_counts,arrival_time,save=False, show=True, sv_path=
     ax.plot(arrival_time,time_counts,'bo',lw=.5)
     plt.title("Event Time Series")
     plt.xlabel("Time of Arrival (s)")
-    plt.ylabel("Counts")
+    plt.ylabel("Counts per second")
 
     if show:
         plt.show()
@@ -77,7 +77,7 @@ def lwc_vis(arrival_time,lwc, save=False, show=True, sv_path=None):
     ax.plot(arrival_time,lwc,'bo',lw=0.5)
     plt.title("Liquid Water Content Visualization")
     plt.xlabel("Arrival Time (s)")
-    plt.ylabel("Liquid Water Content (g)")
+    plt.ylabel(r"Liquid Water Content ($g m^{-3}$)")
 
     if show:
         plt.show()
@@ -93,7 +93,7 @@ def vol_vis(rep_diam,vol, save=False, show=True, sv_path=None):
     ax.plot(rep_diam,vol,'go',lw=0.5)
     plt.title("View Volume Visualization")
     plt.xlabel("Representative Diameter ($\mu m$)")
-    plt.ylabel(r"View Volume ($cm^3$)")
+    plt.ylabel(r"View Volume ($cm^3 s^{-1}$)")
     sv_path=sv_path + ""
     if show:
         plt.show()

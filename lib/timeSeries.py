@@ -119,11 +119,9 @@ class TimeSeries:
 
                     print("Invalid index returned in DSD computation")
                 if not (d>= self.size_edges[cur_bin]) and (d < self.size_edges[cur_bin +1]):
-                    print("Invalid Bin returned!!")
-
+                    print("Invalid Bin returned in DSD computation.")
 
                 self.size_counts[i,cur_bin] = self.size_counts[i,cur_bin] +1
-
             for j in range(len(pcalc)):
                 self.percentile[i,j]=np.percentile(diam,pcalc[j])
             try:

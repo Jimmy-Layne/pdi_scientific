@@ -100,3 +100,18 @@ def vol_vis(rep_diam,vol, save=False, show=True, sv_path=None):
     if save:
         assert (sv_path is not None), "No save path provided"
         plt.savefig(sv_path)
+
+def pvd_vis(rep_diam,PVD, save=False, show=True, sv_path=None):
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.plot(rep_diam,PVD,'go',lw=0.5)
+    plt.title("Probe Volume Diameter Plot")
+    plt.xlabel("Representative Diameter ($\mu m$)")
+    plt.ylabel(r"PVD ($\mu m$)")
+    sv_path=sv_path + ""
+    if show:
+        plt.show()
+    if save:
+        assert (sv_path is not None), "No save path provided"
+        plt.savefig(sv_path)
+

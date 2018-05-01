@@ -1,15 +1,16 @@
 import pandas as pd
 import numpy as np
+import logging as lg
 from os import path, listdir
 
 '''This module holds the file loading and cleanup utillities for the PDI module'''
 #This function combs through a directory for data files containing "DVT_data"
 def get_files(_dir,flag):
-    #Determine the files in the given directory
+    # Determine the files in the given directory
     _files=listdir(_dir)
-    #Sort them, as chronology of filenames is important
+    # Sort them, as chronology of filenames is important
     _files=np.sort(_files)
-    #This is the identifier in the filename to search on
+    # This is the identifier in the filename to search on
     data_list=[]
     for f in _files:
         if flag in f:
@@ -24,15 +25,14 @@ def get_config(cPath):
     with open(cPath, 'r') as f:
         for line in f:
             key,val = line.split(":")
-            if key.rstrip() =="svPath":
+            if key.rstrip() == "svPath":
                 params[key.rstrip()] = val.rstrip()
             else:
                 params[key.rstrip()] = float(val.rstrip())
     test_keys = ['sfreq','cmsk','aLen','stLimit','aqTime']
     for k in test_keys:
         if not k in params.keys():
-            print("Warning, parameter {} not found in config file".format(k))
-            print("Terrible things may happen if you continue, please see the readme.")
+            lg.warning("Warning, parameter {} not found in config file".format(k))
     return(params)
 
 
@@ -57,7 +57,7 @@ def get_event_file(dataPath,channel):
 
     else:
         print("Data Directory is not recognized, or maybe not created yet!")
-    #File list is obtained, now we can create the single event file.
+    # File list is obtained, now we can create the single event file.
     events=pd.DataFrame()
     for f in f_list:
         tmp_ev=pd.read_csv(f)
@@ -65,17 +65,17 @@ def get_event_file(dataPath,channel):
             continue
         else:
             tmp_ev.dropna(inplace=True)
+            # Currently we have a lower limit set for drop sizes at 2 microns
+            tmp_ev = tmp_ev[tmp_ev['size'] > 2.0]
         try:
             assert 'arrival time' in tmp_ev
             assert 'size' in tmp_ev
             assert 'velocity' in tmp_ev
             assert 'gate time' in tmp_ev
         except AssertionError:
-            print("Improperly formatted headers in data file:")
-            print(f)
-            print("please see the readme for more information.")
+            print("Improperly formatted headers in data file: {}".format(f))
             continue
-        #Now we need to coordinate the time
+        # Now we need to coordinate the time
         start_time=set_time(f)
         tmp_ev['arrival time']=tmp_ev['arrival time']+ start_time
 

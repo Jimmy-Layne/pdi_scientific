@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats.mstats import gmean
 import lmfit as lm
+import logging as lg
 
 '''This Module contains the routines to compute quantities from pdi data
 
@@ -79,6 +80,7 @@ def effective_laser_diameter(events,param):
 
 # Fitting routines
 def fit_length(numEV, listEV, Tlength, Lbins,plot=False):
+
     '''This function fits the transit lengths in each diameter bin to our CDF. it returns the D parameter for that bin
      which can be associated with the representative diameter in that bin'''
     N = len(numEV)

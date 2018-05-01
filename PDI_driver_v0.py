@@ -9,7 +9,7 @@ import argparse as arg
 import numpy as np
 
 
-'''This script is designed as the v0 driver for the PDI testing program. '''
+'''This script is designed as the  driver for testing the basic features of the PDI. '''
 
 parser=arg.ArgumentParser()
 
@@ -29,22 +29,19 @@ channel = args.channel[0]
 events, tLims = ut.get_event_file(dataPath, channel)
 
 # Set the rest of the parameters before initialization
-
-dLims=(2.,max(events['size'])+5.)
+# Note, drops have been observed in VOCALS runs which are below 2 microns, the lower limit was then altered to 1.1
+dLims=(1.1,max(events['size'])+5.)
 dBins = 128
 
 params=ut.get_config(config)
 sFreq = params['sfreq']
 # Initialize timeseries object
-flight = ts.TimeSeries(events['arrival time'], events['size'],tLims,dLims,sFreq,dBins)
+flight = ts.TimeSeries(events['arrival time'], events['size'], tLims, dLims,sFreq,dBins)
 
 
 # Now initialize computation of ELD
 eld_coeff = eld.effective_laser_diameter(events,flight.size_param)
 
-
-import pdb
-pdb.set_trace()
 
 #Now initialize the computation of meteorological variables
 # TODO: Figure out how you're passing Alen around, this is some bush league shit

@@ -16,7 +16,7 @@ def met_comp(ts,eld,vel_events,param):
     #Calculate the mass of water at each representative diameter
     w_mass=4./3.*np.pi*(rep_diameter*1.0e-4/2.0)**3 * rho_w*1e3
     # Now we need to compute the view-volume for each bin
-    vol = view_volume(ts,vel_events,eld,param['aLen'])
+    vol, PVD = view_volume(ts,vel_events,eld,param['aLen'])
     # These will hold our concentration and Liquid Water Content timeseries'
     conc_time_series = np.zeros((ts.time_param['num_bins']))
     lwc_time_series = np.zeros((ts.time_param['num_bins']))
@@ -31,7 +31,7 @@ def met_comp(ts,eld,vel_events,param):
         conc_time_series[i]= sum(conc_series)
         lwc_time_series[i] = sum(lwc_series)
 
-    return lwc_time_series,conc_time_series, vol
+    return lwc_time_series,conc_time_series, vol, PVD
 
 
 def view_volume(ts,vel_events,eld,ap_len):
@@ -44,27 +44,20 @@ def view_volume(ts,vel_events,eld,ap_len):
     dt=ts.time_param['delta']
     # Q is now in m
     Q= vm*dt
-    D = eld_model(eld,d)
-
-    plt.plot(d,D,'ko')
-    plt.xlabel("rep diameter (micron)")
-    plt.ylabel("PVD (micron)")
-    plt.show()
-    import pdb
-    pdb.set_trace()
+    PVD = eld_model(eld,d)
 
     # Since the aperature length is provided, we can now compute the view volume for a
     # Given DSD
     # At present, Q is in meters, and D and l are in microns
     # We want the final volume to be in terms of cm^3 so we get:
     # 10^4(um)*10^-2(m)*10^4(um)=10^6
-    tmpd = D * 1e-4
+    tmpd = PVD * 1e-4
     tmpa = ap_len * 1e-4
     tmpq = Q * 1e2
 
     volume = tmpd * tmpa * tmpq
 
-    return volume
+    return volume, PVD
 
 def concentration(vol,nd,DSD):
     '''This function computes the concentration within one of the DSD bins

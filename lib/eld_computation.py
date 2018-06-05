@@ -73,10 +73,11 @@ def effective_laser_diameter(events,param):
                     _list.append(k)
             len_count.append(_count)
             len_list.append(_list)
-        diam_fit.append(fit_length(len_count,len_list,local_tlength,len_bins))
+        diam_fit.append(fit_length(len_count, len_list, local_tlength, len_bins))
     # Now we can fit to determine our ELD coefficients based on this file
     eld_coeff=diameter_fit(rep_diam,diam_fit)
-    return(eld_coeff)
+
+    return(eld_coeff,diam_fit)
 
 # Fitting routines
 def fit_length(numEV, listEV, Tlength, Lbins,plot=False):
@@ -111,7 +112,8 @@ def fit_length(numEV, listEV, Tlength, Lbins,plot=False):
     fit = CDF + result.residual
     
     # these commands check answer with fit reports and plots
-    # print(lm.fit_report(result))
+    #lg.info(lm.fit_report(result))
+    print(lm.fit_report(result))
     if plot:
         fig=plt.figure()
         ax=fig.add_subplot(111)
@@ -147,8 +149,8 @@ def diameter_fit(repDval, Dfit,plot=False):
         fig=plt.figure()
         ax=fig.add_subplot(111)
         plt.title("ELD fit")
-        plt.plot(repDval,Dfit,'go',lw=.5)
-        plt.plot(repDval,fit,"k--",lw=1)
+        plt.plot(repDval, Dfit, 'go',lw=.5)
+        plt.plot(repDval, fit, "k--",lw=1)
         plt.show()
 
     Kvals = result.params.valuesdict()

@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.stats.mstats import gmean
 import lmfit as lm
 import logging as lg
+from os.path import exists as pthext
 
 '''This Module contains the routines to compute quantities from pdi data
 
@@ -79,11 +80,13 @@ def effective_laser_diameter(events,param):
 
     return(eld_coeff,diam_fit)
 
+
 # Fitting routines
-def fit_length(numEV, listEV, Tlength, Lbins,plot=False):
+def fit_length(numEV, listEV, Tlength, Lbins,plot=True):
 
     '''This function fits the transit lengths in each diameter bin to our CDF. it returns the D parameter for that bin
      which can be associated with the representative diameter in that bin'''
+
     N = len(numEV)
     CDF = []
     #TODO: add fitting stats to put in these variables
@@ -110,18 +113,27 @@ def fit_length(numEV, listEV, Tlength, Lbins,plot=False):
     # Now we fit the descrete CDF values to the continuous CDF
     result = lm.minimize(continuous_cdf, par, args=(Ldata, CDF))
     fit = CDF + result.residual
-    
+    DEBUG_OUT = "/home/mrmisanthropy/Projects/pdi_scientific/Debug/MASE"
     # these commands check answer with fit reports and plots
     #lg.info(lm.fit_report(result))
     print(lm.fit_report(result))
     if plot:
         fig=plt.figure()
+        i=0
+        while True:
+            fname = DEBUG_OUT+"/Length_fit_{}.png".format(i)
+            if pthext(fname):
+                i = i+1
+            else:
+                break
         ax=fig.add_subplot(111)
         plt.title("CDF plot")
         ax.plot(Ldata,CDF,'bo')
         ax.plot(Ldata,fit,'r')
         ax.set_ybound(lower=0.0,upper=2)
-        plt.show()
+        plt.savefig(fname)
+        plt.close()
+
 
     # now output the parameter values of each fit
     # we should also output some fitting statistics, but that can come later
@@ -129,9 +141,12 @@ def fit_length(numEV, listEV, Tlength, Lbins,plot=False):
 
     return Dval['Diam']
 
-def diameter_fit(repDval, Dfit,plot=False):
-    '''This function fits the D values output from the transit length fits, to the representative diameters computed 
+
+def diameter_fit(repDval, Dfit,plot=True):
+
+    '''This function fits the D values output fromr the transit length fits, to the representative diameters computed
     for each diameter bin by equation 5.'''
+
     N = len(Dfit)
     # First we'll need to generate the d values to be used
     Dfit = np.asarray(Dfit, dtype="float")
@@ -139,7 +154,18 @@ def diameter_fit(repDval, Dfit,plot=False):
     params = lm.Parameters()
     params.add("K0", vary=True, value=1e-6)
     params.add("K1", vary=True, value=1e-8)
-    result = lm.minimize(eld_model, params, args=(repDval, Dfit))
+    DEBUG_OUT="/home/mrmisanthropy/Projects/pdi_scientific/Debug/MASE"
+    try:
+        result = lm.minimize(eld_model, params, args=(repDval, Dfit))
+    except ValueError:
+        # Plot check
+        fig=plt.figure()
+        ax=fig.add_subplot(111)
+        plt.title("ELD fit")
+        plt.plot(repDval, Dfit, 'go',lw=.5)
+        fname=DEBUG_OUT+"Diam_fit.png"
+        plt.savefig(fname)
+        plt.close()
     #TODO: Write logging utillity
     print(lm.fit_report(result))
     
@@ -151,7 +177,9 @@ def diameter_fit(repDval, Dfit,plot=False):
         plt.title("ELD fit")
         plt.plot(repDval, Dfit, 'go',lw=.5)
         plt.plot(repDval, fit, "k--",lw=1)
-        plt.show()
+        fname=DEBUG_OUT+"/Diam_fit.png"
+        plt.savefig(fname)
+        plt.close()
 
     Kvals = result.params.valuesdict()
     return ((Kvals['K0'], Kvals['K1']))

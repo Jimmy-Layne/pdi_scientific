@@ -30,16 +30,14 @@ args=parser.parse_args()
 dataPath = args.fileNames[0]
 channel = args.channel[0]
 
-
-
 # Initialize logger
 now = dt.datetime.now()
 
-LOG_NAME = "/home/mrmisanthropy/Projects/pdi_scientific/pdi_logfile/pdiRun_{}_{}.log".format(channel, now.strftime("%Y-%m-%d_%H-%M"))
-fh = lg.FileHandler(LOG_NAME)
-fh.setLevel(lg.DEBUG)
-formatter = lg.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-fh.setFormatter(formatter)
+# LOG_NAME = "/home/mrmisanthropy/Projects/pdi_scientific/pdi_logfile/pdiRun_{}_{}.log".format(channel, now.strftime("%Y-%m-%d_%H-%M"))
+# fh = lg.FileHandler(LOG_NAME)
+# fh.setLevel(lg.DEBUG)
+# formatter = lg.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# fh.setFormatter(formatter)
 # lg.addHandler(fh)
 
 

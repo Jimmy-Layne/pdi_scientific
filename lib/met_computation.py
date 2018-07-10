@@ -87,7 +87,11 @@ def eld_model(eld, d):
         if d[i] == 0.0:
             D[i] = 0.0
         elif d[i] < eld_floor:
-            D[i] = np.sqrt(E0 + E1 * np.log(eld_floor))
+            try:
+                D[i] = np.sqrt(E0 + E1 * np.log(eld_floor))
+            except TypeError:
+                import pdb
+                pdb.set_trace()
         else:
             D[i] = np.sqrt(E0 + E1 * np.log(d[i]))
 

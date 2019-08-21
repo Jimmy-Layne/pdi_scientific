@@ -9,6 +9,7 @@ import lib.menu as mnu
 import argparse as arg
 import curses as cs
 import logging as lg
+from os.path import join, dirname
 
 import datetime as dt
 '''This program is designed to be a more robust interface for the PDI processing software.'''
@@ -19,7 +20,8 @@ import datetime as dt
 
 
 # This is the config path provided to utilities, change as needed
-config = "/home/mrmisanthropy/Projects/pdi_scientific/pdi_config.cfg"
+main_dir = dirname(__file__)
+config = join(main_dir, 'pdi_config.cfg')
 
 # Initialize Argument Parser
 parser=arg.ArgumentParser()
@@ -30,15 +32,8 @@ args=parser.parse_args()
 dataPath = args.fileNames[0]
 channel = args.channel[0]
 
-# Initialize logger
 now = dt.datetime.now()
 
-# LOG_NAME = "/home/mrmisanthropy/Projects/pdi_scientific/pdi_logfile/pdiRun_{}_{}.log".format(channel, now.strftime("%Y-%m-%d_%H-%M"))
-# fh = lg.FileHandler(LOG_NAME)
-# fh.setLevel(lg.DEBUG)
-# formatter = lg.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-# fh.setFormatter(formatter)
-# lg.addHandler(fh)
 
 
 print("Initializing event file...")
@@ -61,7 +56,6 @@ print("Computing Met Variables...")
 eld_coeff, diam_fit = eld.effective_laser_diameter(events,flight.size_param)
 
 #Now initialize the computation of meteorological variables
-# TODO: Figure out how you're passing Alen around, this is some bush league shit
 lwc,conc,vol,PVD = met.met_comp(flight,eld_coeff,events['velocity'],params)
 print("Finished!")
 
